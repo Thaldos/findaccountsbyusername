@@ -1,0 +1,17 @@
+{
+    "name": "thaldos/find-accounts-by-username",
+    "autoload": {
+        "psr-4": {
+            "Thaldos\\FindAccountsByUsername\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vincent Godé",
+            "email": "hellog@vincentgo.fr"
+        }
+    ],
+    "require": {
+        "nikolaposa/rate-limit": "^3.0"
+    }
+}

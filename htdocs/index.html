@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="images/find-accounts-by-username.png" type="image/png" />
+        <link type="text/css" rel="stylesheet" href="css/style.css" media="all" />
+        <link type="text/css" rel="stylesheet" href="css/spinner.css" media="all" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+        <title>Find your accounts across the web by your username</title>
+    </head>
+    <body>
+        <div class="container-search">
+            <h2>Who uses your brand?</h2>
+            <h1>Find accounts by username</h1>
+            <h3>Where have you already created an account?</h3>
+                <input class="input-search" 
+                    type="text" 
+                    name="username" 
+                    id="username" 
+                    placeholder="Your username" 
+                    data-type="text" 
+                    autofocus="autofocus"
+                    onkeypress="keyPressListener(event)">
+                <button type="submit" class="button-search" id="button-search">
+                    <span>Search</span>
+                </button>
+        </div>
+        <div class="container-results">
+            <h4>Results</h3>
+            <div class="spinner" id="spinner" style="display: none">
+                <div class="lds-roller">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="spinner-text">
+                    <span>Please wait. It can take maximum 180 secondes, be patient.</span>
+                </div>
+            </div>
+            <script type="text/javascript">
+                // Searh the accounts of username in input and set urls in results list :
+                function search() {
+                    let username = $('#username').val();
+                    if (username != '') {
+                        // Show spinner :
+                        let element = $("#spinner");
+                        element.slideToggle(500);
+
+                        // Scroll to spinner :
+                        $('html, body').animate({
+                            scrollTop: $("#spinner").offset().top
+                        }, 2000);
+
+                        // Send request to service :
+                        $.ajax({
+                            method: "POST",
+                            url: window.location.href + 'api.php',
+                            data: {
+                                username: username
+                            },
+                            success: function(urls) {
+                                // Display urls :
+                                let ul = $('<ul/>');
+                                $.each(urls, function (key, url) {
+                                    let li = 
+                                        '<li>' +
+                                            '<span>' +
+                                                '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">'  +
+                                                    '<defs>' +
+                                                        '<style>' +
+                                                            '.cls-1{fill:#a64eee}.cls-2{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-width:2px}' +
+                                                        '</style>' +
+                                                    '</defs>' +
+                                                    '<g id="success">' +
+                                                        '<circle id="Ellipse_14" cx="12.5" cy="12.5" r="12.5" class="cls-1" data-name="Ellipse 14"></circle>' +
+                                                        '<path id="Path_1930" d="M21.111 15L15.5 21.308 12 18.5" class="cls-2" data-name="Path 1930" transform="translate(-4.056 -6.134)"></path>' +
+                                                    '</g>' +
+                                                '</svg>' + 
+                                            '</span>' +
+                                            '<span class="result-url"><a href="' + url + '" title="Go to ' + url + '" target="_blank">' + url + '</a></span>' +
+                                        '</li>';
+                                    ul.append(li);
+                                });   
+                                $("#results").html('');
+                                $("#results").append(ul);
+
+                                // Hide spinner :
+                                element.slideToggle(500);
+                            },
+                            error: function() {
+                                $("#results").html('');
+                                $("#results").append('<p>An error occured :\'(</p>');
+
+                                // Hide spinner :
+                                element.slideToggle(500);
+                            }
+                        });
+                    }
+                }
+
+                // On enter pressed :
+                function keyPressListener(e) {
+                    if (e.keyCode == 13) {
+                        search();
+                    }
+                }
+
+                // On click on search button : 
+                $("#button-search").click(function () {
+                    search();
+                });
+            </script>
+            <div id="results"></div>
+        </div>
+        <div class="container-api">
+            <h4>API for developers</h3>
+            <p>This service is available for free by sending request to :</p> 
+            <ul>
+                <li><p><strong>Endpoint :</strong> https://findaccountsbyusername.com/api.php</p> <li>
+                <li><p><strong>Method :</strong> POST</p><li>
+                <li><p><strong>Param :</strong> The username (string)</p><li>
+                <li><p><strong>Return :</strong> a JSON</p><li>
+                <li><p><strong>Limitation :</strong> 10 requests max by minute</p><li>
+            </ul>
+        </div>
+        <div class="container-footer">
+            <p><a href="https://github.com/Thaldos/findaccountsbyusername" title="Got to github.com/Thaldos/findaccountsbyusername" target="_blank">Website</a> made with <img class="heart" src="https://img.icons8.com/material/20/ec5f67/hearts.png"> by <a href="https://vincentgo.fr" title="Got to vincentgo.fr" target="_blank">Vincent Godé</a>. Powered by <a href="https://sherlock-project.github.io/" title="Got to sherlock-project.github.io" target="_blank">Sherlock</a> project.</p>
+            <p>Any data stored. This service is free, open source, without tracking and will be <a href="https://www.youtube.com/watch?v=2VSYmGSJtCA" title="Got to youtube.com/watch?v=2VSYmGSJtCA" target="_blank">forever and ever</a>.</p>
+        </div>
+    </body>
+</html>
