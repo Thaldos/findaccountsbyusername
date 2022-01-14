@@ -1,4 +1,4 @@
-# find-accounts-by-username
+# findaccountsbyusername
 
 ## Installation
 ### Install vendor
